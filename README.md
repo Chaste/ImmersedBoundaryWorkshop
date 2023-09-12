@@ -166,14 +166,32 @@ Find the following line of code, and try adjusting the parameter. You can experi
 The `ImmersedBoundaryLinearMembraneForce` models forces between membrane nodes using linear springs i.e, the force applied is proportional to the deviation of the distance between nodes from a rest length.
 
 # Exercise 2 - Adding More Cells
+The starting code for this exercise is found in `TestImmersedBoundaryWorkshop_Exercise_2`. The starter code is a simulation containing a single cell.
 
 ### 2.1 Adding More Cells
+We can use the mesh generator to generate multiple cells. In the line of code
+
+    ImmersedBoundaryPalisadeMeshGenerator gen(1, 128, 0.1, 2.0, 0.0, false);
+
+the first parameter controls the number of cells. Try increasing this to generate more cells.
+
+**Tip** A sensible range for this exercise will be 4-10 cells
 
 ### 2.2 Introducing Laminas
+In addition to the cells we have seen so far, we can introduce laminas to the simulation. Laminas are surfaces with reduced dimensionality. For 3d elements, a lamina is a 2d surface. For the 2d elements we are working with, laminas are lines.
+
+Change the last parameter of the mesh generator constructor from `false` to `true`. This will generate a basal lamina spanning the palisade cells. Laminas can also interact with the fluid field, and can be made 'leaky' to allow some flow across their boundary. This can be used to model a permeable boundary.
 
 ### 2.3 Cell Variations
 
+As with the single cell in exercise 1.3, we can use the 3rd and 4th constructor parameters to modify the cell shapes. However, we can also introduce variation between cells by modifying the 5th parameter. Have a go at modifying the 5th parameter to the constructor.
+
 ### 2.4 Intercellular Interactions
+
+So far, we have encountered forces that act to maintain the shape of the cell membrane. We can also introduce forces that apply between cells.
+
+Using the code which sets up the `ImmersedBoundaryLinearMembraneForce` as a reference, add a new force with the `ImmersedBoundaryLinearInteractionForce` type and add it to the simulation. Instead of the `SetElementSpringConst` method, the interaction force has a `SetSpringConst` method which we should use. A sensible initial value is `1.0 * 1e6`. The rest length can also be modified using the `SetRestLength` method.
+
 
 ## Exercise 3 - Adding Fluid Sources
 
