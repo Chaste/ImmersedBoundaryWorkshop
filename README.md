@@ -142,6 +142,8 @@ We will then use paraview to display the simulation results.
 
 You can use this process each time you modify the simulation to visualise your results.
 
+**Tip** You can also right click on a dataset and click reload files. This saves you going through all of the menus again.
+
 ### 1.3 Modifying the Initial Shape
 
 We will now see how we can vary the initial shape of cells generated using the `ImmersedBoundaryPalisadeMeshGenerator`

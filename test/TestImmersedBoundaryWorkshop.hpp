@@ -124,7 +124,7 @@ public:
     void TestImmersedBoundaryWorkshop_Exercise_2()
     {
         // Comment the line below out to enable running Exercise 2
-        //return;
+        return;
 
         // Set the start time for the simulation
         SimulationTime::Instance()->SetStartTime(0.0);
@@ -193,7 +193,7 @@ public:
     void TestImmersedBoundaryWorkshop_Exercise_3()
     {
         // Comment the line below out to enable running Exercise 2
-        //return;
+        return;
 
         SimulationTime::Instance()->SetStartTime(0.0);
 
@@ -264,7 +264,7 @@ public:
 
     void TestImmersedBoundaryWorkshop_Exercise_4()
     {
-
+        // Comment the line below out to enable running Exercise 2
         return;
 
         // Set the start time for the simulation
@@ -310,7 +310,7 @@ public:
 
         // Set simulation properties
         double dt = 0.05;
-        simulator.SetOutputDirectory("ImmersedBoundaryWorkshop_Exercise_2");
+        simulator.SetOutputDirectory("ImmersedBoundaryWorkshop_Exercise_4");
         simulator.SetDt(dt);
         simulator.SetSamplingTimestepMultiple(4u);
         simulator.SetEndTime(1000 * dt);
