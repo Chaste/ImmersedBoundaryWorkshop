@@ -192,11 +192,6 @@ public:
         SimulationTime::Instance()->Destroy();
     }
 
-    // 3.1 Introduce fluid source
-    // 3.2 Vary source location
-    // 3.3 Vary source strength
-    // 3.4 Vary boundary stiffness 
-    // 3.5 Add a second fluid source
     void TestImmersedBoundaryWorkshop_Exercise_3()
     {
         // Comment the line below out to enable running Exercise 2
@@ -227,6 +222,9 @@ public:
         // 0.005
         source->SetStrength(0.012);
         p_mesh->GetElement(2)->SetFluidSource(source);
+
+        // EXERCISE 3.5
+        // Add a second fluid source
 
         // 0.5, 0.7
         FluidSource<2>* source2 = new FluidSource<2>(1, 0.5, 0.3);

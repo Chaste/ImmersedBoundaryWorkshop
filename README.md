@@ -140,10 +140,30 @@ We will then use paraview to display the simulation results.
 5. To the left of `results.pvd` there is a small icon of a closed eye. Click on this icon to show the dataset.
 6. Use the control arrows at the top to play back the simulation.
 
+You can use this process each time you modify the simulation to visualise your results.
+
 ### 1.3 Modifying the Initial Shape
+
+We will now see how we can vary the initial shape of cells generated using the `ImmersedBoundaryPalisadeMeshGenerator`
+
+Find the following line of code, which sets up the mesh generator:
+
+    ImmersedBoundaryPalisadeMeshGenerator gen(1, 128, 0.1, 2.0, 0.0, false);
+
+The 3rd and 4th parameters control the exponent of the superellipse and the aspect ratio of the cell. Experiment with modifying these to change the initial shape of the cell.
+
+**Tip** There are comments labelling the correct bits of code for each exercise, e.g. `EXERCISE 1.3`. You can search for these to quickly find the right section.
 
 
 ### 1.4 Exploring Cell Membrane Forces
+
+In addition to changing the initial shape of the cells, we can also adapt the behaviour of the cell membrane by modifying the force behaviour between nodes of the cell boundary.
+
+Find the following line of code, and try adjusting the parameter. You can experiment with different combinations of spring constants and cell shapes.
+
+    p_boundary_force->SetElementSpringConst(1.0 * 1e7);
+
+The `ImmersedBoundaryLinearMembraneForce` models forces between membrane nodes using linear springs i.e, the force applied is proportional to the deviation of the distance between nodes from a rest length.
 
 # Exercise 2 - Adding More Cells
 
