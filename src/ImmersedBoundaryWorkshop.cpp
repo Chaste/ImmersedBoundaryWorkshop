@@ -32,21 +32,3 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-#include "ImmersedBoundaryWorkshop.hpp"
-#include "Exception.hpp"
-
-Hello_project1::Hello_project1(const std::string& rMessage)
-    : mMessage(rMessage)
-{
-}
-
-std::string Hello_project1::GetMessage()
-{
-    return mMessage;
-}
-
-void Hello_project1::Complain(const std::string& rComplaint)
-{
-    EXCEPTION(rComplaint);
-}

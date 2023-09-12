@@ -32,23 +32,3 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-#ifndef HELLO_PROJECT1_HPP_
-#define HELLO_PROJECT1_HPP_
-
-#include <string>
-
-class Hello_project1
-{
-private:
-    std::string mMessage;
-
-public:
-    Hello_project1(const std::string& rMessage);
-
-    std::string GetMessage();
-
-    void Complain(const std::string& rComplaint);
-};
-
-#endif /*HELLO_PROJECT1_HPP_*/

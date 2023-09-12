@@ -37,9 +37,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define TESTIMMERSEDBOUNDARYWORKSHOP_HPP_
 
 #include <cxxtest/TestSuite.h>
-/* Most Chaste code uses PETSc to solve linear algebra problems.  This involves starting PETSc at the beginning of a test-suite
- * and closing it at the end.  (If you never run code in parallel then it is safe to replace PetscSetupAndFinalize.hpp with FakePetscSetup.hpp)
- */
 #include "PetscSetupAndFinalize.hpp"
 #include "ImmersedBoundaryWorkshop.hpp"
 
@@ -63,41 +60,50 @@ class TestImmersedBoundaryWorkshop : public CxxTest::TestSuite
 public:
     void TestImmersedBoundaryWorkshop_Exercise_1()
     {
+        // Uncomment the line below to disable exercise 1
+        //return;
+
+        // Set the start time for the simulation
         SimulationTime::Instance()->SetStartTime(0.0);
 
-        std::unique_ptr<SuperellipseGenerator> p_gen(new SuperellipseGenerator(128, 1.0, 0.4, 0.8, 0.3, 0.2));
-        const std::vector<c_vector<double, 2> > locations = p_gen->GetPointsAsVectors();
+        // EXERCISE 1.3
+        // Try modifying the 3rd and 4th parameters of the constructor
+        // to change the initial cell shape
+        
+        // Generate a mesh containing a single cell
+        ImmersedBoundaryPalisadeMeshGenerator gen(1, 128, 0.1, 2.0, 0.0, false);
+        ImmersedBoundaryMesh<2, 2>* p_mesh = gen.GetMesh();
 
-        std::vector<Node<2>* > nodes;
-        std::vector<ImmersedBoundaryElement<2,2>* > elements;
-
-        for (unsigned location = 0; location < locations.size(); location++)
-        {
-            nodes.push_back(new Node<2>(location, locations[location], true));
-        }
-
-        elements.push_back(new ImmersedBoundaryElement<2,2>(0, nodes));
-
-        std::unique_ptr<ImmersedBoundaryMesh<2,2>> p_mesh(new ImmersedBoundaryMesh<2,2>(nodes, elements));
+        // Set the fluid grid resolution
         p_mesh->SetNumGridPtsXAndY(64);
 
+        // Set up the cell population
         std::vector<CellPtr> cells;
         MAKE_PTR(DifferentiatedCellProliferativeType, p_cell_type);
         CellsGenerator<UniformCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements(), p_cell_type);
 
         ImmersedBoundaryCellPopulation<2> cell_population(*p_mesh, cells);
+
+        // Specify whether the population has active fluid sources
         cell_population.SetIfPopulationHasActiveSources(false);
 
+        // Create a simulator to manage our simulation
         OffLatticeSimulation<2> simulator(cell_population);
         simulator.SetNumericalMethod(boost::make_shared<ForwardEulerNumericalMethod<2,2> >());
         simulator.GetNumericalMethod()->SetUseUpdateNodeLocation(true);
 
-        // Add main immersed boundary simulation modifier
+        // Add an immersed boundary simulation modifier
+        // The modifier is responsible for managing the fluid simulation
+        // and propagating forces between the fluid & cell
         MAKE_PTR(ImmersedBoundarySimulationModifier<2>, p_main_modifier);
         simulator.AddSimulationModifier(p_main_modifier);
 
-        // Add force law
+        // EXERCISE 1.4
+        // Try modifying the spring constant to investigate the
+        // effect of the membrane forces
+        
+        // Add a force law to model the behaviour of the cell membrane
         MAKE_PTR(ImmersedBoundaryLinearMembraneForce<2>, p_boundary_force);
         p_main_modifier->AddImmersedBoundaryForce(p_boundary_force);
         p_boundary_force->SetElementSpringConst(1.0 * 1e7);
@@ -109,19 +115,40 @@ public:
         simulator.SetSamplingTimestepMultiple(4u);
         simulator.SetEndTime(1000 * dt);
 
+        // Perform the simulation
         simulator.Solve();
-        
+      
         SimulationTime::Instance()->Destroy();
     }
 
     void TestImmersedBoundaryWorkshop_Exercise_2()
     {
+        // Comment the line below out to enable running Exercise 2
+        //return;
+
+        // Set the start time for the simulation
         SimulationTime::Instance()->SetStartTime(0.0);
 
-        ImmersedBoundaryPalisadeMeshGenerator gen(2, 128, 0.1, 2.0, 0.0, false);
+
+        // EXERCISE 2.1
+        // Modify the first argument to the constructor below
+        // to change the number of cells.
+        
+        // EXERCISE 2.2
+        // Modify the last argument to generate a lamina
+
+        // EXERCISE 2.3
+        // Have a play around with the other parameters in the 
+        // constructor to modify the cell properties
+
+        // Generate a mesh containing a single cell
+        ImmersedBoundaryPalisadeMeshGenerator gen(1, 128, 0.1, 2.0, 0.0, false);
         ImmersedBoundaryMesh<2, 2>* p_mesh = gen.GetMesh();
+
+        // Set the fluid grid resolution
         p_mesh->SetNumGridPtsXAndY(64);
 
+        // Set up the cell population
         std::vector<CellPtr> cells;
         MAKE_PTR(DifferentiatedCellProliferativeType, p_cell_type);
         CellsGenerator<UniformCellCycleModel, 2> cells_generator;
@@ -143,6 +170,10 @@ public:
         MAKE_PTR(ImmersedBoundaryLinearMembraneForce<2>, p_boundary_force);
         p_main_modifier->AddImmersedBoundaryForce(p_boundary_force);
         p_boundary_force->SetElementSpringConst(1.0 * 1e7);
+        
+        // EXERCISE 2.4
+        // Add an ImmersedBoundaryLinearInteractionForce and 
+        // experiment with the parameters
         
         MAKE_PTR(ImmersedBoundaryLinearInteractionForce<2>, p_cell_cell_force);
         p_main_modifier->AddImmersedBoundaryForce(p_cell_cell_force);
@@ -168,7 +199,9 @@ public:
     // 3.5 Add a second fluid source
     void TestImmersedBoundaryWorkshop_Exercise_3()
     {
-        
+        // Comment the line below out to enable running Exercise 2
+        //return;
+
         SimulationTime::Instance()->SetStartTime(0.0);
 
         ImmersedBoundaryPalisadeMeshGenerator gen(5, 128, 0.1, 2.0, 0.0, false);
@@ -180,6 +213,15 @@ public:
         CellsGenerator<UniformCellCycleModel, 2> cells_generator;
         cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements(), p_cell_type);
 
+        // EXERCISE 3.1
+        // Add a fluid source here
+        
+        // EXERCISE 3.2
+        // Try modifying the source location
+        
+        // EXERCISE 3.3
+        // Try varying the source strength
+        
         // 0.5, 0.7
         FluidSource<2>* source = new FluidSource<2>(0, 0.5, 0.7);
         // 0.005
@@ -204,6 +246,10 @@ public:
         MAKE_PTR(ImmersedBoundarySimulationModifier<2>, p_main_modifier);
         simulator.AddSimulationModifier(p_main_modifier);
 
+        // EXERCISE 3.4
+        // Vary the source location, strength and membrane force properties together
+        // to explore the interactions between them
+        
         // Add force law
         MAKE_PTR(ImmersedBoundaryLinearMembraneForce<2>, p_boundary_force);
         p_main_modifier->AddImmersedBoundaryForce(p_boundary_force);
@@ -226,65 +272,65 @@ public:
         SimulationTime::Instance()->Destroy();
     }
 
-    void TestImmersedBoundaryWorkshop_Exercise_4()
-    {
-        
-        SimulationTime::Instance()->SetStartTime(0.0);
+    //void TestImmersedBoundaryWorkshop_Exercise_4()
+    //{
+    //    
+    //    SimulationTime::Instance()->SetStartTime(0.0);
 
-        ImmersedBoundaryPalisadeMeshGenerator gen(5, 128, 0.1, 2.0, 0.0, false);
-        ImmersedBoundaryMesh<2, 2>* p_mesh = gen.GetMesh();
-        p_mesh->SetNumGridPtsXAndY(64);
+    //    ImmersedBoundaryPalisadeMeshGenerator gen(5, 128, 0.1, 2.0, 0.0, false);
+    //    ImmersedBoundaryMesh<2, 2>* p_mesh = gen.GetMesh();
+    //    p_mesh->SetNumGridPtsXAndY(64);
 
-        std::vector<CellPtr> cells;
-        MAKE_PTR(DifferentiatedCellProliferativeType, p_cell_type);
-        CellsGenerator<AlwaysDivideCellCycleModel, 2> cells_generator;
-        cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements(), p_cell_type);
+    //    std::vector<CellPtr> cells;
+    //    MAKE_PTR(DifferentiatedCellProliferativeType, p_cell_type);
+    //    CellsGenerator<AlwaysDivideCellCycleModel, 2> cells_generator;
+    //    cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements(), p_cell_type);
 
-        // 0.5, 0.7
-        FluidSource<2>* source = new FluidSource<2>(0, 0.5, 0.7);
-        // 0.005
-        source->SetStrength(0.012);
-        p_mesh->GetElement(2)->SetFluidSource(source);
+    //    // 0.5, 0.7
+    //    FluidSource<2>* source = new FluidSource<2>(0, 0.5, 0.7);
+    //    // 0.005
+    //    source->SetStrength(0.012);
+    //    p_mesh->GetElement(2)->SetFluidSource(source);
 
-        // 0.5, 0.7
-        FluidSource<2>* source2 = new FluidSource<2>(1, 0.5, 0.3);
-        // 0.005
-        source2->SetStrength(0.012);
-        p_mesh->GetElement(3)->SetFluidSource(source2);
+    //    // 0.5, 0.7
+    //    FluidSource<2>* source2 = new FluidSource<2>(1, 0.5, 0.3);
+    //    // 0.005
+    //    source2->SetStrength(0.012);
+    //    p_mesh->GetElement(3)->SetFluidSource(source2);
 
-        ImmersedBoundaryCellPopulation<2> cell_population(*p_mesh, cells);
-        cell_population.SetIfPopulationHasActiveSources(true);
-        
+    //    ImmersedBoundaryCellPopulation<2> cell_population(*p_mesh, cells);
+    //    cell_population.SetIfPopulationHasActiveSources(true);
+    //    
 
-        OffLatticeSimulation<2> simulator(cell_population);
-        simulator.SetNumericalMethod(boost::make_shared<ForwardEulerNumericalMethod<2,2> >());
-        simulator.GetNumericalMethod()->SetUseUpdateNodeLocation(true);
+    //    OffLatticeSimulation<2> simulator(cell_population);
+    //    simulator.SetNumericalMethod(boost::make_shared<ForwardEulerNumericalMethod<2,2> >());
+    //    simulator.GetNumericalMethod()->SetUseUpdateNodeLocation(true);
 
-        // Add main immersed boundary simulation modifier
-        MAKE_PTR(ImmersedBoundarySimulationModifier<2>, p_main_modifier);
-        simulator.AddSimulationModifier(p_main_modifier);
+    //    // Add main immersed boundary simulation modifier
+    //    MAKE_PTR(ImmersedBoundarySimulationModifier<2>, p_main_modifier);
+    //    simulator.AddSimulationModifier(p_main_modifier);
 
-        // Add force law
-        MAKE_PTR(ImmersedBoundaryLinearMembraneForce<2>, p_boundary_force);
-        p_main_modifier->AddImmersedBoundaryForce(p_boundary_force);
-        // 1e7
-        p_boundary_force->SetElementSpringConst(1.0 * 1e7);
-        
-        MAKE_PTR(ImmersedBoundaryLinearInteractionForce<2>, p_cell_cell_force);
-        p_main_modifier->AddImmersedBoundaryForce(p_cell_cell_force);
-        p_cell_cell_force->SetSpringConst(1.0 * 1e6);
+    //    // Add force law
+    //    MAKE_PTR(ImmersedBoundaryLinearMembraneForce<2>, p_boundary_force);
+    //    p_main_modifier->AddImmersedBoundaryForce(p_boundary_force);
+    //    // 1e7
+    //    p_boundary_force->SetElementSpringConst(1.0 * 1e7);
+    //    
+    //    MAKE_PTR(ImmersedBoundaryLinearInteractionForce<2>, p_cell_cell_force);
+    //    p_main_modifier->AddImmersedBoundaryForce(p_cell_cell_force);
+    //    p_cell_cell_force->SetSpringConst(1.0 * 1e6);
 
-        // Set simulation properties
-        double dt = 0.05;
-        simulator.SetOutputDirectory("ImmersedBoundaryWorkshop_Exercise_3");
-        simulator.SetDt(dt);
-        simulator.SetSamplingTimestepMultiple(4u);
-        simulator.SetEndTime(300 * dt);
+    //    // Set simulation properties
+    //    double dt = 0.05;
+    //    simulator.SetOutputDirectory("ImmersedBoundaryWorkshop_Exercise_3");
+    //    simulator.SetDt(dt);
+    //    simulator.SetSamplingTimestepMultiple(4u);
+    //    simulator.SetEndTime(300 * dt);
 
-        simulator.Solve();
-        
-        SimulationTime::Instance()->Destroy();
-    }
+    //    simulator.Solve();
+    //    
+    //    SimulationTime::Instance()->Destroy();
+    //}
 };
 
 #endif /*TESTIMMERSEDBOUNDARYWORKSHOP_HPP_*/
