@@ -2,9 +2,9 @@
 This workshop will guide you through four sections:
 
 1. Setting up the immersed boundary code
-2. Building simple immersed boundary capable simulations
-3. Adding and manipulating fluid sources
-4. Integrating cell functionality
+2. Building single cell immersed boundary capable simulations
+3. Multi-cellular simulations
+4. Adding and manipulating fluid sources
 
 ## 1. Set Up
 
