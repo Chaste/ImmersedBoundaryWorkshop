@@ -195,14 +195,47 @@ Using the code which sets up the `ImmersedBoundaryLinearMembraneForce` as a refe
 
 ## Exercise 3 - Adding Fluid Sources
 
+Now that we are familiar with how to generate the cells, we will introduce fluid sources. The starter code for this exericse is in the `TestImmersedBoundaryWorkshop_Exercise_3` method and contains a multi-cellular simulation.
+
 ### 3.1 Adding a Fluid Source
 
-FluidSource<2> (0, 0.5, 0.7)
+We will begin by constructing a fluid source object. Find the `EXERCISE 3.1` comment and add the code given below
+
+    FluidSource<2>* source = new FluidSource<2>(0, 0.5, 0.7);
+
+This constructs a `FluidSource` object in 2 dimensions and gets a pointer to it. The first parameter gives the index of the fluid source. Each source you create must have a unique index. The next parameters are the `x` and `y` coordinates of the source. Fluid sources in chaste are point-like, that is to say they do not have any area/volume.
+
+Having created the fluid source, we set its strength:
+
+    source->SetStrength(0.012);
+
+Now, we must associate the source with an element in the simulation so that the simulation is aware of the source.
+
+    p_mesh->GetElement(0)->SetFluidSource(source);
+
+Finally, we must tell the cell population that fluid sources are present. Find the line of code 
+
+    cell_population.SetIfPopulationHasActiveSources(false);
+
+and change `false` to `true`.
 
 ### 3.2 Varying the Source Location
 
+Experiment with the source location. Try moving it closer to and further away from the cells.
+
 ### 3.3 Varying the Source Strength
+
+Try modifying the source strength to see what impact this has on the cell shapes.
 
 ### 3.4 Fluid-Cell Interaction
 
+Have a go at modifying the spring constant of the `ImmersedBoundaryLinearMembraneForce` to see how this changes the effect of the fluid source on the cells.
+
 ### 3.5 Adding More Sources
+
+Using the code for the first fluid source as a reference, add a second fluid source. You will need to use a unique index, and attach it to a different element as each element can only manage a single fluid source.
+
+## Stretch Exercises
+
+- Try integrating a different cell cycle model to introduce cell division. See how the presence of a fluid source impacts the structure that is formed.
+- Use one of the cell writers to collect some statistics 
