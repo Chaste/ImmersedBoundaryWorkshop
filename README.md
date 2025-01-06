@@ -10,26 +10,25 @@ This workshop will guide you through four sections:
 
 ### Required Software
 - git
-- docker
-- vscode with devcontainers extension
-- paraview
+- [Docker](https://www.docker.com)
+- [VSCode](https://code.visualstudio.com) with [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) extension
+- [Paraview](https://www.paraview.org)
 
 ### Installation 
 
-If you have already attended the chaste with docker workshop this morning, you may have already completed some of these steps.
+If you have already attended the Chaste installation session, you may have already completed some of these steps.
 
-1. Clone the chaste git repository `git clone git@github.com:Chaste/Chaste.git`
-2. Navigate into the repository with the terminal/command line
-3. Checkout the immersed boundary code `git checkout mleach/immersed-boundary-pr`
-4. Navigate into the `projects` subfolder
-5. Clone the workshop project `git clone git@github.com:MILeach/ImmersedBoundaryWorkshop.git`
+1. Clone the Chaste git repository: `git clone https://github.com/Chaste/Chaste`
+2. Navigate into the repository with the terminal/command line: `cd Chaste`
+3. Navigate into the `projects` subfolder: `cd projects`
+4. Clone the workshop project: `git clone https://github.com/Chaste/ImmersedBoundaryWorkshop`
 
 We are now ready to build the code
 
-6. Open the repository using vscode and the devcontainers extension
-7. Using the termainal in vscode, navigate to the lib directory `cd lib`
-8. Because we have introduced new source files and a new project, we need to reconfigure the project. Do this using `cmake ../src`
-9. Once this completes, we are ready to build the workshop project! `make -j8 project_ImmersedBoundaryWorkshop`. This may take some time the first time you run it.
+5. Open the repository using VSCode and the Dev Containers extension
+6. Using the terminal in VSCode, navigate to the lib directory: `cd lib`
+7. Because we have introduced new source files and a new project, we need to reconfigure the project. Do this using `cmake ../src`
+8. Once this completes, we are ready to build the workshop project! `make -j8 project_ImmersedBoundaryWorkshop`. This may take some time the first time you run it.
 
 Each time you make a change to the code, you will re-run `make -j8 project_ImmersedBoundaryWorkshop` to compile your changes. 
 
