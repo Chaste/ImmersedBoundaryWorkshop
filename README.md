@@ -1,4 +1,4 @@
-# Immersed Boundary Workshop - 12/09/2023
+# Immersed Boundary Workshop
 This workshop will guide you through four sections:
 
 1. Setting up the immersed boundary code
