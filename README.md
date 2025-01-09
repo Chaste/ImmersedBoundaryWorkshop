@@ -26,7 +26,7 @@ If you have already attended the Chaste installation session, you may have alrea
 We are now ready to build the code
 
 5. Open the repository using VSCode and the Dev Containers extension
-6. Using the terminal in VSCode, navigate to the lib directory: `cd lib`
+6. Using the terminal in VSCode, navigate to the build directory: `cd build`
 7. Because we have introduced new source files and a new project, we need to reconfigure the project. Do this using `cmake ../src`
 8. Once this completes, we are ready to build the workshop project! `make -j8 project_ImmersedBoundaryWorkshop`. This may take some time the first time you run it.
 
@@ -38,7 +38,7 @@ Each time you make a change to the code, you will re-run `make -j8 project_Immer
 
 The workshop code is implemented within a test file. We can run the code using the following command `ctest -V -R ImmersedBoundaryWorkshop`
 
-**Tip** The build and run commands (`make`, `ctest`) will only work from the `lib` folder
+**Tip** The build and run commands (`make`, `ctest`) will only work from the `build` folder
 
 ### Editing the Code
 
