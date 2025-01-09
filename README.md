@@ -202,7 +202,7 @@ Now that we are familiar with how to generate the cells, we will introduce fluid
 
 We will begin by constructing a fluid source object. Find the `EXERCISE 3.1` comment and add the code given below
 
-    FluidSource<2>* source = new FluidSource<2>(0, 0.5, 0.7);
+    std::shared_ptr<FluidSource<2>> source = std::make_shared<FluidSource<2>>(0, 0.5, 0.7);
 
 This constructs a `FluidSource` object in 2 dimensions and gets a pointer to it. The first parameter gives the index of the fluid source. Each source you create must have a unique index. The next parameters are the `x` and `y` coordinates of the source. Fluid sources in chaste are point-like, that is to say they do not have any area/volume.
 
